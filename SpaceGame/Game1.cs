@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Drawing;
 
 namespace SpaceGame
 {
@@ -19,7 +20,9 @@ namespace SpaceGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            _graphics.PreferredBackBufferWidth = 640;
+            _graphics.PreferredBackBufferHeight = 900;
+            _graphics.ApplyChanges(); 
             base.Initialize();
         }
 
@@ -42,10 +45,8 @@ namespace SpaceGame
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.MidnightBlue);
             // TODO: Add your drawing code here
-
             base.Draw(gameTime);
         }
     }
