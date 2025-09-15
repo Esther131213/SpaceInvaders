@@ -17,7 +17,7 @@ namespace SpaceGame
         Vector2 position;
         int playerSpeed = 10;
 
-        public Player(Texture2D texture, Vector2 position)
+        public player(Texture2D texture, Vector2 position)
         {
             this.texture = texture;
 
