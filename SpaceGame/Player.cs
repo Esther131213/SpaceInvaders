@@ -26,7 +26,6 @@ namespace SpaceGame
 
         public void Update(GameTime gameTime)
         {
-            playerSpeed = 10;
             var kstate = Keyboard.GetState();
             if (kstate.IsKeyDown(Keys.Right) && pos.X < 600)
             {

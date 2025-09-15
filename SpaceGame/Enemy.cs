@@ -11,24 +11,31 @@ using System.Drawing;
 
 namespace SpaceGame
 {
-    internal class Enemy
+    public class Enemy
     {
-        Texture2D texture;
-        Vector2 position;
+        Texture2D tex;
+        Vector2 pos;
+        int enemySpeedDown;
 
-        public Enemy(Texture2D texture, Vector2 position)
+        public Enemy(Texture2D tex, Vector2 pos, int enemySpeedDown)
         {
-
+            this.tex = tex;
+            this.pos = pos;
+            this.enemySpeedDown = enemySpeedDown;
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
-
+            if (pos.Y == 900)
+            {
+                enemySpeedDown = 0;
+            }
+            pos.Y += enemySpeedDown;
         }
 
-        public void Draw()
+        public void Draw(SpriteBatch spriteBatch)
         {
-
+            spriteBatch.Draw(tex, pos, null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(tex.Width / 2, tex.Height / 2), 1, SpriteEffects.None, 0);
         }
     }
 }

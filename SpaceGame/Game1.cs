@@ -15,10 +15,17 @@ namespace SpaceGame
     {
         private GraphicsDeviceManager _graphics;
         public SpriteBatch spriteBatch;
+        //Player
         public Texture2D playerTex;
         public Vector2 playerPos;
-        public int playerSpeed;
+        public int playerSpeed = 10; //Player speed
         public Player player;
+        //Enemies
+        public Texture2D enemyTex;
+        public Vector2 enemyPos;
+        public int enemySpeedDown = 2; //Enemy speed
+        public Enemy enemy;
+
 
         public Game1()
         {
@@ -34,6 +41,7 @@ namespace SpaceGame
             _graphics.PreferredBackBufferHeight = 900;
             _graphics.ApplyChanges(); 
             playerPos = new Vector2(_graphics.PreferredBackBufferWidth / 2, 800);
+            enemyPos = new Vector2(_graphics.PreferredBackBufferWidth / 2, 0);
             base.Initialize();
         }
 
@@ -43,6 +51,8 @@ namespace SpaceGame
             // TODO: use this.Content to load your game content here
             playerTex = Content.Load<Texture2D>("Player");
             player = new Player(playerTex, playerPos, playerSpeed);
+            enemy = new Enemy(enemyTex, enemyPos, enemySpeedDown);
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -61,6 +71,7 @@ namespace SpaceGame
             spriteBatch.Begin();
             base.Draw(gameTime);
             player.Draw(spriteBatch);
+            enemy.Draw(spriteBatch);
             spriteBatch.End();
         }
     }
