@@ -21,7 +21,7 @@ namespace SpaceGame
 
         }
 
-        public void Load()
+        public void Update()
         {
 
         }

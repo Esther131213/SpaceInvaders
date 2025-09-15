@@ -33,7 +33,7 @@ namespace SpaceGame
             _graphics.PreferredBackBufferWidth = 640;
             _graphics.PreferredBackBufferHeight = 900;
             _graphics.ApplyChanges(); 
-            playerPos = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
+            playerPos = new Vector2(_graphics.PreferredBackBufferWidth / 2, 800);
             base.Initialize();
         }
 

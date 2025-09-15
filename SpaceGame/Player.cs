@@ -26,13 +26,13 @@ namespace SpaceGame
 
         public void Update(GameTime gameTime)
         {
-            playerSpeed = 13;
+            playerSpeed = 10;
             var kstate = Keyboard.GetState();
-            if (kstate.IsKeyDown(Keys.Right))
+            if (kstate.IsKeyDown(Keys.Right) && pos.X < 600)
             {
                 pos.X += playerSpeed;
             }
-            if (kstate.IsKeyDown(Keys.Left))
+            if (kstate.IsKeyDown(Keys.Left) && pos.X > 40)
             {
                 pos.X -= playerSpeed;
             }
@@ -40,7 +40,7 @@ namespace SpaceGame
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(tex, pos, Microsoft.Xna.Framework.Color.White);
+            spriteBatch.Draw(tex, pos, null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(tex.Width /2, tex.Height /2), 1, SpriteEffects.None, 0);
         }
     }
 }
