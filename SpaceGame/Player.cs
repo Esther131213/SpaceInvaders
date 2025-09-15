@@ -11,35 +11,36 @@ using System.Drawing;
 
 namespace SpaceGame
 {
-    internal class Player
+    public class Player
     {
-        Texture2D texture;
-        Vector2 position;
-        int playerSpeed = 10;
+        Texture2D tex;
+        Vector2 pos;
+        int playerSpeed;
 
-        public player(Texture2D texture, Vector2 position)
+        public Player(Texture2D tex, Vector2 pos, int playerSpeed)
         {
-            this.texture = texture;
-
-            this.position = new Vector2(100, 100);
+            this.tex = tex;
+            this.pos = pos;
+            this.playerSpeed = playerSpeed;
         }
 
-        public void Load()
+        public void Update(GameTime gameTime)
         {
+            playerSpeed = 13;
             var kstate = Keyboard.GetState();
-            if (kstate.IsKeyDown(Keys.Left))
+            if (kstate.IsKeyDown(Keys.Right))
             {
-                position.X += playerSpeed;
+                pos.X += playerSpeed;
             }
             if (kstate.IsKeyDown(Keys.Left))
             {
-                position.X -= playerSpeed;
+                pos.X -= playerSpeed;
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, Microsoft.Xna.Framework.Color.White);
+            spriteBatch.Draw(tex, pos, Microsoft.Xna.Framework.Color.White);
         }
     }
 }

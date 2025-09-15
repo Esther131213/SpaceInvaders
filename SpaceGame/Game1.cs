@@ -7,14 +7,18 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Drawing;
+using SharpDX.MediaFoundation;
 
 namespace SpaceGame
 {
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        new Texture2D = playerTex;
+        public SpriteBatch spriteBatch;
+        public Texture2D playerTex;
+        public Vector2 playerPos;
+        public int playerSpeed;
+        public Player player;
 
         public Game1()
         {
@@ -29,24 +33,24 @@ namespace SpaceGame
             _graphics.PreferredBackBufferWidth = 640;
             _graphics.PreferredBackBufferHeight = 900;
             _graphics.ApplyChanges(); 
+            playerPos = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
             base.Initialize();
-
         }
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            spriteBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
+            playerTex = Content.Load<Texture2D>("Player");
+            player = new Player(playerTex, playerPos, playerSpeed);
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
             // TODO: Add your update logic here
-
+            player.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -54,7 +58,10 @@ namespace SpaceGame
         {
             GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.MidnightBlue);
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
             base.Draw(gameTime);
+            player.Draw(spriteBatch);
+            spriteBatch.End();
         }
     }
 }
