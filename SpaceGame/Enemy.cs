@@ -22,11 +22,12 @@ namespace SpaceGame
             this.tex = tex;
             this.pos = pos;
             this.enemySpeedDown = enemySpeedDown;
+            System.Diagnostics.Debug.WriteLine(pos);
         }
 
         public void Update(GameTime gameTime)
         {
-            if (pos.Y == 900)
+            if (pos.Y == 890)
             {
                 enemySpeedDown = 0;
             }
@@ -36,6 +37,7 @@ namespace SpaceGame
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(tex, pos, null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(tex.Width / 2, tex.Height / 2), 1, SpriteEffects.None, 0);
+
         }
     }
 }
