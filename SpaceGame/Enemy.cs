@@ -13,12 +13,11 @@ namespace SpaceGame
     public class Enemy
     {
         Texture2D tex;
-        Vector2 pos;
+        public Vector2 pos;
         float enemySpeedDown;
         public bool eIsAlive = true;
-        private readonly Player player;
         public Rectangle eHitBox;
-        bool isLeft;
+        bool isLeft = true;
         bool isRight = false;
 
         public Enemy(Texture2D tex, Vector2 pos, float enemySpeedDown)
@@ -30,39 +29,7 @@ namespace SpaceGame
 
         public void Update(GameTime gameTime)
         {
-            if (pos.Y == 890)
-            {
-                player.takeDamage();
-                eIsAlive = false;
-                pos.Y = 1000;
-            }
             pos.Y += enemySpeedDown;
-            for (int i = 0; i <= 10; i++)
-            {
-                if (isLeft)
-                {
-                    pos.X += 1f;
-                }
-                else if (isRight)
-                {
-                    pos.X -= 1f;
-                }
-                if (i == 10)
-                {
-                    if (isRight)
-                    {
-                        isLeft = true;
-                        isRight = false;
-                    }
-                    else if (isLeft)
-                    {
-                        isLeft = false;
-                        isRight = true;
-                    }
-
-                    i = 0;
-                }
-            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

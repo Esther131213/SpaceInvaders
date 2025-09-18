@@ -48,9 +48,8 @@ namespace SpaceGame
 
         public void takeDamage()
         {
-            playerHealth = -1;
+            playerHealth -= 1;
         }
-
 
         public void Draw(SpriteBatch spriteBatch)
         {

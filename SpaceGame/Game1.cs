@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+
 namespace SpaceGame
 {
     public class Game1 : Game
@@ -25,7 +26,6 @@ namespace SpaceGame
         public float enemySpeedDown = 1f; //Enemy speed
         List<Enemy> enemiesList;
         Enemy enemy;
-        Rectangle enemyRect;
         int enemyAmount = 10; //Amount of enemies
         //Bullets
         public Texture2D bulletTex;
@@ -34,7 +34,6 @@ namespace SpaceGame
         List<Bullet> bulletList;
         Bullet bullet;
         private KeyboardState keystate;
-        Rectangle bulletRect;
 
         public Game1()
         {
@@ -112,6 +111,13 @@ namespace SpaceGame
             // All player/enemy/bullet updates
             foreach (Enemy enemy in enemiesList)
             {
+                if (enemy.pos.Y > 890 && enemy.eIsAlive)
+                {
+                    enemy.eIsAlive = false;
+                    enemiesList.Remove(enemy);
+                    player.takeDamage();
+                    break;
+                }
                 enemy.Update(gameTime);
             }
             foreach (Bullet bullet in bulletList)
