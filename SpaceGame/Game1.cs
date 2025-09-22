@@ -84,13 +84,16 @@ namespace SpaceGame
         protected override void Update(GameTime gameTime)
         {
             Window.Title = ("Welcome to Space Invaders!  Player Health: " + player.playerHealth + "   Score: " + score);
+
             //Creates a bullet when pressing "space"
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && !keystate.IsKeyDown(Keys.Space))
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && !keystate.IsKeyDown(Keys.Space) && player.pIsAlive)
             {
                 Bullet b = new Bullet(bulletTex, player.pos, bulletSpeed);
                 bulletList.Add(b);
+                //Console.Beep(440, 500);
                 keystate = Keyboard.GetState();
             }
+
             if (Keyboard.GetState().IsKeyUp(Keys.Space))
             {
                 keystate = Keyboard.GetState();
