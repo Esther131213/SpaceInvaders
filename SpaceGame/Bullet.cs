@@ -26,9 +26,9 @@ namespace SpaceGame
 
         public void Update(GameTime gameTime)
         {
+            //Makes the bullet constantly move upward, unless it has reached Y = 0.
             pos.Y -= bulletSpeed;
-
-            if (pos.Y == 0)
+            if (pos.Y < 0)
             {
                 isAlive = false;
             }
@@ -44,6 +44,5 @@ namespace SpaceGame
         {
             return bHitBox;
         }
-
     }
 }

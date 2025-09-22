@@ -26,7 +26,8 @@ namespace SpaceGame
         public float enemySpeedDown = 1f; //Enemy speed
         List<Enemy> enemiesList;
         Enemy enemy;
-        int enemyAmount = 10; //Amount of enemies
+        int enemyAmount = 6; //Amount of enemies per row
+        int enemyRowAmount = 5; //Amount of enemy rows
         //Bullets
         public Texture2D bulletTex;
         public Vector2 bulletPos;
@@ -65,28 +66,18 @@ namespace SpaceGame
             enemiesList = new List<Enemy>();
             bulletList = new List<Bullet>();
 
-            //Creating Enemies and their position in line, could make into a for-loop inside a for-loop, but this works for now (Hard coding). 
-            for (int i = 0; i < enemyAmount -1; i++)
+            //Creating Enemies and their position. (Also creates the seoerate lines of enemies)
+
+            for (int r = 0; r < enemyRowAmount; r++)
             {
-                enemyPos.X += _graphics.PreferredBackBufferWidth / enemyAmount;
-                Enemy b = new Enemy(enemyTex, enemyPos, enemySpeedDown);
-                enemiesList.Add(b);
-            }
-            enemyPos.X = 0;
-            for (int i = 0; i < enemyAmount - 1; i++)
-            {
-                enemyPos.Y = -50;
-                enemyPos.X += _graphics.PreferredBackBufferWidth / enemyAmount;
-                Enemy b = new Enemy(enemyTex, enemyPos, enemySpeedDown);
-                enemiesList.Add(b);
-            }
-            enemyPos.X = 0;
-            for (int i = 0; i < enemyAmount - 1; i++)
-            {
-                enemyPos.Y = -100;
-                enemyPos.X += _graphics.PreferredBackBufferWidth / enemyAmount;
-                Enemy e = new Enemy(enemyTex, enemyPos, enemySpeedDown);
-                enemiesList.Add(e);
+                for (int i = 0; i < enemyAmount - 1; i++)
+                {
+                    enemyPos.Y = r * -50;
+                    enemyPos.X += _graphics.PreferredBackBufferWidth / enemyAmount;
+                    Enemy b = new Enemy(enemyTex, enemyPos, enemySpeedDown);
+                    enemiesList.Add(b);
+                }
+                enemyPos.X = 0;
             }
         }
 

@@ -29,12 +29,13 @@ namespace SpaceGame
 
         public void Update(GameTime gameTime)
         {
-            /*
+            //Checks if the player is alive, makes the player "Dead" if not. 
             if (playerHealth == 0)
             {
                 pIsAlive = false;
             }
-            */
+
+            //Movement
             var kstate = Keyboard.GetState();
             if (kstate.IsKeyDown(Keys.Right) && pos.X < 600)
             {
@@ -46,6 +47,7 @@ namespace SpaceGame
             }
         }
 
+        //Taking damage
         public void takeDamage()
         {
             playerHealth -= 1;
@@ -53,7 +55,7 @@ namespace SpaceGame
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(tex, pos, null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(tex.Width /2, tex.Height /2), 1, SpriteEffects.None, 1);
+            spriteBatch.Draw(tex, pos, null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(tex.Width / 2, tex.Height / 2), 1, SpriteEffects.None, 1);
         }
     }
 }

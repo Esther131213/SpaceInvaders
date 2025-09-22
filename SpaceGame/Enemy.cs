@@ -29,6 +29,7 @@ namespace SpaceGame
 
         public void Update(GameTime gameTime)
         {
+            //Makes the enemy constantly move down towards the player
             pos.Y += enemySpeedDown;
         }
 
