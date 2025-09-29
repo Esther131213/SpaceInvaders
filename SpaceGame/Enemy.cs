@@ -14,23 +14,24 @@ namespace SpaceGame
     {
         Texture2D tex;
         public Vector2 pos;
-        float enemySpeedDown;
+        float enemySpeed;
         public bool eIsAlive = true;
         public Rectangle eHitBox;
-        bool isLeft = true;
-        bool isRight = false;
+        bool goingLeft = false;
+        bool goingRight = false;
+        bool goingDown = true;
 
-        public Enemy(Texture2D tex, Vector2 pos, float enemySpeedDown)
+        public Enemy(Texture2D tex, Vector2 pos, float enemySpeed)
         {
             this.tex = tex;
             this.pos = pos;
-            this.enemySpeedDown = enemySpeedDown;
+            this.enemySpeed = enemySpeed;
         }
 
         public void Update(GameTime gameTime)
         {
             //Makes the enemy constantly move down towards the player
-            pos.Y += enemySpeedDown;
+            pos.Y += enemySpeed;
         }
 
         public void Draw(SpriteBatch spriteBatch)

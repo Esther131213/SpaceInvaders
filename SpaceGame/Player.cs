@@ -18,25 +18,39 @@ namespace SpaceGame
         int playerSpeed;
         public int playerHealth;
         public bool pIsAlive = true;
+        public Game1 Game1;
+        KeyboardState kstate;
 
-        public Player(Texture2D tex, Vector2 pos, int playerSpeed)
+        public Player(Texture2D tex, Vector2 pos, int playerSpeed, Game1 game1)
         {
             this.tex = tex;
             this.pos = pos;
             this.playerSpeed = playerSpeed;
             playerHealth = 3;
+            Game1 = game1;
         }
 
         public void Update(GameTime gameTime)
         {
+            //Create a bullet
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && !kstate.IsKeyDown(Keys.Space) && pIsAlive)
+            {
+                Game1.CreateBullet();
+                kstate = Keyboard.GetState();
+            }
+
+            if (Keyboard.GetState().IsKeyUp(Keys.Space))
+            {
+                kstate = Keyboard.GetState();
+            }
             //Checks if the player is alive, makes the player "Dead" if not. 
             if (playerHealth == 0)
             {
                 pIsAlive = false;
             }
+            kstate = Keyboard.GetState();
 
             //Movement
-            var kstate = Keyboard.GetState();
             if (kstate.IsKeyDown(Keys.Right) && pos.X < 600)
             {
                 pos.X += playerSpeed;

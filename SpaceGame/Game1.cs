@@ -23,10 +23,10 @@ namespace SpaceGame
         //Enemies
         public Texture2D enemyTex;
         public Vector2 enemyPos;
-        public float enemySpeedDown = 1f; //Enemy speed
-        List<Enemy> enemiesList;
+        public float enemySpeed = 1f; //Enemy speed
+        Enemy[,] enemieArray;
         Enemy enemy;
-        int enemyAmount = 6; //Amount of enemies per row
+        int enemyAmount = 10; //Amount of enemies per row
         int enemyRowAmount = 5; //Amount of enemy rows
         //Bullets
         public Texture2D bulletTex;
@@ -34,7 +34,6 @@ namespace SpaceGame
         public int bulletSpeed = 10;
         List<Bullet> bulletList;
         Bullet bullet;
-        private KeyboardState keystate;
 
         public Game1()
         {
@@ -57,28 +56,33 @@ namespace SpaceGame
         protected override void LoadContent()
         {
             //Loads the textures necessary and creates the lists required. 
-            enemyAmount += 1;
             spriteBatch = new SpriteBatch(GraphicsDevice);
             playerTex = Content.Load<Texture2D>("Player");
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
             bulletTex = Content.Load<Texture2D>("BulletPng");
-            player = new Player(playerTex, playerPos, playerSpeed);
-            enemiesList = new List<Enemy>();
+            player = new Player(playerTex, playerPos, playerSpeed, this);
+            enemieArray = new Enemy[enemyAmount, enemyRowAmount];
             bulletList = new List<Bullet>();
-
             //Creating Enemies and their position. (Also creates the seoerate lines of enemies)
 
             for (int r = 0; r < enemyRowAmount; r++)
             {
-                for (int i = 0; i < enemyAmount - 1; i++)
+                for (int i = 0; i < enemyAmount; i++)
                 {
                     enemyPos.Y = r * -50;
-                    enemyPos.X += _graphics.PreferredBackBufferWidth / enemyAmount;
-                    Enemy b = new Enemy(enemyTex, enemyPos, enemySpeedDown);
-                    enemiesList.Add(b);
+                    int enemyFrame = _graphics.PreferredBackBufferWidth / (enemyAmount + 1);
+                    enemyPos.X = enemyFrame + i * enemyFrame;
+                    enemieArray[i,r] = new Enemy(enemyTex,enemyPos, enemySpeed);
+                    continue;
                 }
                 enemyPos.X = 0;
             }
+        }
+
+        public void CreateBullet()
+        {
+            Bullet b = new Bullet(bulletTex, player.pos, bulletSpeed);
+            bulletList.Add(b);
         }
 
         protected override void Update(GameTime gameTime)
@@ -86,55 +90,46 @@ namespace SpaceGame
             Window.Title = ("Welcome to Space Invaders!  Player Health: " + player.playerHealth + "   Score: " + score);
 
             //Creates a bullet when pressing "space"
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && !keystate.IsKeyDown(Keys.Space) && player.pIsAlive)
-            {
-                Bullet b = new Bullet(bulletTex, player.pos, bulletSpeed);
-                bulletList.Add(b);
-                //Console.Beep(440, 500);
-                keystate = Keyboard.GetState();
-            }
-
-            if (Keyboard.GetState().IsKeyUp(Keys.Space))
-            {
-                keystate = Keyboard.GetState();
-            }
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // All player/enemy/bullet updates
-            foreach (Enemy enemy in enemiesList)
+            foreach (Enemy enemy in enemieArray)
             {
                 if (enemy.pos.Y > 890 && enemy.eIsAlive)
                 {
-                    enemy.eIsAlive = false;
-                    enemiesList.Remove(enemy);
                     player.takeDamage();
+                    enemy.eIsAlive = false;
                     break;
                 }
-                enemy.Update(gameTime);
+
+            enemy.Update(gameTime);
             }
+
             foreach (Bullet bullet in bulletList)
             {
                 bullet.Update(gameTime);
             }
+
             player.Update(gameTime);
-            base.Update(gameTime);
             
             //Bullet hits enemy reaction
             foreach (Bullet bullet in bulletList)
             {
-                foreach (Enemy enemy in enemiesList)
+                foreach (Enemy enemy in enemieArray)
                 {
                     if (bullet.GetHitBox().Intersects(enemy.GetHitBox()))
                     {
                         score += 10;
-                        enemiesList.Remove(enemy);
+                        enemy.eIsAlive = false;
+                        enemy.eHitBox.X = 3000;
                         bullet.pos.Y = -100;
                         break;
                     }
                 }
             }
+            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -149,7 +144,7 @@ namespace SpaceGame
                 player.Draw(spriteBatch);
             }
             //Draws out the enemy incase it is still Alive
-            foreach (Enemy enemy in enemiesList)
+            foreach (Enemy enemy in enemieArray)
             {
                 if (enemy.eIsAlive)
                 {
