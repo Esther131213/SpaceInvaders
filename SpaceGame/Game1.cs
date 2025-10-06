@@ -89,12 +89,12 @@ namespace SpaceGame
         {
             Window.Title = ("Welcome to Space Invaders!  Player Health: " + player.playerHealth + "   Score: " + score);
 
-            //Creates a bullet when pressing "space"
-
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // All player/enemy/bullet updates
+
+            //Player takes damage if enemy reaches floor
             foreach (Enemy enemy in enemieArray)
             {
                 if (enemy.pos.Y > 890 && enemy.eIsAlive)
@@ -104,15 +104,13 @@ namespace SpaceGame
                     break;
                 }
 
-            enemy.Update(gameTime);
+                enemy.Update(gameTime);
             }
 
             foreach (Bullet bullet in bulletList)
             {
                 bullet.Update(gameTime);
             }
-
-            player.Update(gameTime);
             
             //Bullet hits enemy reaction
             foreach (Bullet bullet in bulletList)
@@ -129,6 +127,8 @@ namespace SpaceGame
                     }
                 }
             }
+
+            player.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -138,27 +138,41 @@ namespace SpaceGame
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             base.Draw(gameTime);
-            //Checks if the player is alive, then draws out the player
-            if (player.pIsAlive)
+
+            if (player.playerHealth > 0)
             {
-                player.Draw(spriteBatch);
-            }
-            //Draws out the enemy incase it is still Alive
-            foreach (Enemy enemy in enemieArray)
-            {
-                if (enemy.eIsAlive)
+                //Checks if the player is alive, then draws out the player
+                if (player.pIsAlive = true)
                 {
-                    enemy.Draw(spriteBatch);
+                    player.Draw(spriteBatch);
+                }
+                //Draws out the enemy incase it is still Alive
+                foreach (Enemy enemy in enemieArray)
+                {
+                    if (enemy.eIsAlive)
+                    {
+                        enemy.Draw(spriteBatch);
+                    }
+                }
+                //Draws out the enemy incase it is still "Alive"
+                foreach (Bullet bullet in bulletList)
+                {
+                    if (bullet.isAlive)
+                    {
+                        bullet.Draw(spriteBatch);
+                    }
                 }
             }
-            //Draws out the enemy incase it is still "Alive"
-            foreach (Bullet bullet in bulletList)
+            else
             {
-                if (bullet.isAlive)
+                player.pIsAlive = false;
+                foreach (Enemy enemy in enemieArray)
                 {
-                    bullet.Draw(spriteBatch);
+                    enemy.eIsAlive = false;
                 }
+
             }
+
             spriteBatch.End();
         }
     }

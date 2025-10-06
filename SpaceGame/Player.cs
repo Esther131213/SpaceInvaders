@@ -16,7 +16,7 @@ namespace SpaceGame
         Texture2D tex;
         public Vector2 pos;
         int playerSpeed;
-        public int playerHealth;
+        public int playerHealth = 3;
         public bool pIsAlive = true;
         public Game1 Game1;
         KeyboardState kstate;
@@ -48,6 +48,7 @@ namespace SpaceGame
             {
                 pIsAlive = false;
             }
+
             kstate = Keyboard.GetState();
 
             //Movement
