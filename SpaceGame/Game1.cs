@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace SpaceGame
@@ -23,7 +25,7 @@ namespace SpaceGame
         //Enemies
         public Texture2D enemyTex;
         public Vector2 enemyPos;
-        public float enemySpeed = 1f; //Enemy speed
+        public float enemySpeed = 0.5f; //Enemy speed
         Enemy[,] enemieArray;
         Enemy enemy;
         int enemyAmount = 10; //Amount of enemies per row
@@ -34,6 +36,12 @@ namespace SpaceGame
         public int bulletSpeed = 10;
         List<Bullet> bulletList;
         Bullet bullet;
+        //GameState
+        //GameOver
+        bool GameOver = false;
+        Texture2D gameOverText;
+        Vector2 gameOverPos;
+        Random rngPos = new Random();
 
         public Game1()
         {
@@ -55,6 +63,12 @@ namespace SpaceGame
 
         protected override void LoadContent()
         {
+            //GameState Textures
+            //Game Over
+            gameOverText = Content.Load<Texture2D>("game_over-2");
+            gameOverPos = new Vector2(_graphics.PreferredBackBufferWidth / 2, 300);
+
+            //Game Running
             //Loads the textures necessary and creates the lists required. 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             playerTex = Content.Load<Texture2D>("Player");
@@ -70,14 +84,24 @@ namespace SpaceGame
                 for (int i = 0; i < enemyAmount; i++)
                 {
                     enemyPos.Y = r * -50;
-                    int enemyFrame = _graphics.PreferredBackBufferWidth / (enemyAmount + 1);
+                    int enemyFrame = 500 / (enemyAmount + 1);
                     enemyPos.X = enemyFrame + i * enemyFrame;
                     enemieArray[i,r] = new Enemy(enemyTex,enemyPos, enemySpeed);
                     continue;
                 }
+
                 enemyPos.X = 0;
             }
         }
+
+        public enum GameState
+        {
+            startScreen = 1,
+            play = 2,
+            gameOver = 3
+        }
+
+        GameState gameState = GameState.startScreen;
 
         public void CreateBullet()
         {
@@ -87,6 +111,7 @@ namespace SpaceGame
 
         protected override void Update(GameTime gameTime)
         {
+            if (player.pIsAlive)
             Window.Title = ("Welcome to Space Invaders!  Player Health: " + player.playerHealth + "   Score: " + score);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -139,38 +164,45 @@ namespace SpaceGame
             spriteBatch.Begin();
             base.Draw(gameTime);
 
-            if (player.playerHealth > 0)
+            if (GameOver == false)
             {
-                //Checks if the player is alive, then draws out the player
-                if (player.pIsAlive = true)
+                if (player.playerHealth > 0)
                 {
-                    player.Draw(spriteBatch);
-                }
-                //Draws out the enemy incase it is still Alive
-                foreach (Enemy enemy in enemieArray)
-                {
-                    if (enemy.eIsAlive)
+                    //Checks if the player is alive, then draws out the player
+                    if (player.pIsAlive = true)
                     {
-                        enemy.Draw(spriteBatch);
+                        player.Draw(spriteBatch);
+                    }
+                    //Draws out the enemy incase it is still Alive
+                    foreach (Enemy enemy in enemieArray)
+                    {
+                        if (enemy.eIsAlive)
+                        {
+                            enemy.Draw(spriteBatch);
+                        }
+                    }
+                    //Draws out the enemy incase it is still "Alive"
+                    foreach (Bullet bullet in bulletList)
+                    {
+                        if (bullet.isAlive)
+                        {
+                            bullet.Draw(spriteBatch);
+                        }
                     }
                 }
-                //Draws out the enemy incase it is still "Alive"
-                foreach (Bullet bullet in bulletList)
+                else
                 {
-                    if (bullet.isAlive)
+                    player.pIsAlive = false;
+                    foreach (Enemy enemy in enemieArray)
                     {
-                        bullet.Draw(spriteBatch);
+                        enemy.eIsAlive = false;
                     }
+                    GameOver = true;
                 }
             }
-            else
+            if (GameOver)
             {
-                player.pIsAlive = false;
-                foreach (Enemy enemy in enemieArray)
-                {
-                    enemy.eIsAlive = false;
-                }
-
+                spriteBatch.Draw(gameOverText, gameOverPos, null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(gameOverText.Width / 2, gameOverText.Height / 2), 1, SpriteEffects.None, 1);
             }
 
             spriteBatch.End();
