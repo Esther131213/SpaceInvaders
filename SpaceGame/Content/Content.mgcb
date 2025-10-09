@@ -73,6 +73,16 @@
 /processorParam:TextureFormat=Color
 /build:Player.png
 
+#begin Silkscreen-Bold[1].ttf
+/importer:
+/processor:
+/build:Silkscreen-Bold[1].ttf
+
+#begin Silkscreen-Regular.ttf
+/importer:
+/processor:
+/build:Silkscreen-Regular.ttf
+
 #begin space2.png
 /importer:TextureImporter
 /processor:TextureProcessor

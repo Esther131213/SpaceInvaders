@@ -9,6 +9,7 @@ using Microsoft.VisualBasic.Logging;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.DirectWrite;
 
 
 namespace SpaceGame
@@ -18,6 +19,8 @@ namespace SpaceGame
         private GraphicsDeviceManager _graphics;
         public SpriteBatch spriteBatch;
         int score;
+        string scoreString;
+        SpriteFont scoreFont;
         //Player
         public Texture2D playerTex;
         public Vector2 playerPos;
@@ -51,6 +54,15 @@ namespace SpaceGame
         //You Won
         bool YouWon = false;
 
+        public enum GameState
+        {
+            startScreen = 1,
+            play = 2,
+            gameOver = 3
+        }
+
+        GameState gameState = GameState.startScreen;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -71,6 +83,8 @@ namespace SpaceGame
 
         protected override void LoadContent()
         {
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
             //GameState Textures
             //Game Over
             gameOverText = Content.Load<Texture2D>("game_over-2");
@@ -78,7 +92,6 @@ namespace SpaceGame
 
             //Game Running
             //Loads the textures necessary and creates the lists required. 
-            spriteBatch = new SpriteBatch(GraphicsDevice);
             playBackground = Content.Load<Texture2D>("space2");
             playerTex = Content.Load<Texture2D>("Player");
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
@@ -87,6 +100,10 @@ namespace SpaceGame
             player = new Player(playerTex, playerPos, playerSpeed, this);
             enemieArray = new Enemy[enemyAmount, enemyRowAmount];
             bulletList = new List<Bullet>();
+
+            //Fonts
+            scoreFont = Content.Load<SpriteFont>("Silkscreen-Regular");
+
             //Creating Enemies and their position. (Also creates the seoerate lines of enemies)
 
             for (int r = 0; r < enemyRowAmount; r++)
@@ -114,15 +131,6 @@ namespace SpaceGame
             }
         }
 
-        public enum GameState
-        {
-            startScreen = 1,
-            play = 2,
-            gameOver = 3
-        }
-
-        GameState gameState = GameState.startScreen;
-
         public void CreateBullet()
         {
             Bullet b = new Bullet(bulletTex, player.pos, bulletSpeed);
@@ -131,8 +139,7 @@ namespace SpaceGame
 
         protected override void Update(GameTime gameTime)
         {
-            if (player.pIsAlive)
-            Window.Title = ("Welcome to Space Invaders!  Player Health: " + player.playerHealth + "   Score: " + score);
+            scoreString = new string("Score: " + score);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -185,13 +192,14 @@ namespace SpaceGame
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.MidnightBlue);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.MidnightBlue);
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             base.Draw(gameTime);
 
-            if (GameOver == false)
+            if (gameState == GameState.play)
             {
+                spriteBatch.DrawString(scoreFont, scoreString, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.White);
                 spriteBatch.Draw(playBackground, new Vector2(_graphics.PreferredBackBufferWidth/2, _graphics.PreferredBackBufferHeight/2), null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(playBackground.Width / 2, playBackground.Height / 2), 1, SpriteEffects.None, 1);
                 if (player.playerHealth > 0)
                 {
@@ -227,9 +235,10 @@ namespace SpaceGame
                     GameOver = true;
                 }
             }
-            if (GameOver)
+            if (gameState == GameState.gameOver)
             {
                 spriteBatch.Draw(gameOverText, gameOverPos, null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(gameOverText.Width / 2, gameOverText.Height / 2), 1, SpriteEffects.None, 1);
+                spriteBatch.Draw(playBackground, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(playBackground.Width / 2, playBackground.Height / 2), 1, SpriteEffects.None, 1);
             }
 
             spriteBatch.End();
