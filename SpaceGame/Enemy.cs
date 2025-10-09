@@ -32,12 +32,16 @@ namespace SpaceGame
         double frameTimer = 0;
         double frameInterval = 2000;
         int movementAmount = 0;
+        public int enemyHealth;
+        public int eScore;
 
-        public Enemy(Texture2D tex, Vector2 pos, float enemySpeed)
+        public Enemy(Texture2D tex, Vector2 pos, float enemySpeed, int enemyHealth, int eScore)
         {
             this.tex = tex;
             this.pos = pos;
             this.enemySpeed = enemySpeed;
+            this.enemyHealth = enemyHealth;
+            this.eScore = eScore;
         }
 
         public void Update(GameTime gameTime)
@@ -80,7 +84,14 @@ namespace SpaceGame
         public void Draw(SpriteBatch spriteBatch)
         {
             eHitBox = new Rectangle((int)pos.X, (int)pos.Y, tex.Width, tex.Height);
-            spriteBatch.Draw(tex, pos, null, Color.White, 0, new Vector2(tex.Width / 2, tex.Height / 2), 1, SpriteEffects.None, 0);
+            if (enemyHealth == 1)
+            {
+                spriteBatch.Draw(tex, pos, null, Color.White, 0, new Vector2(tex.Width / 2, tex.Height / 2), 1, SpriteEffects.None, 0);
+            }
+            else if (enemyHealth == 2)
+            {
+                spriteBatch.Draw(tex, pos, null, Color.DarkOliveGreen, 0, new Vector2(tex.Width / 2, tex.Height / 2), 1, SpriteEffects.None, 0);
+            }
         }
 
         public Rectangle GetHitBox()

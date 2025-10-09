@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic.Logging;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using static System.Net.Mime.MediaTypeNames;
 
 
 namespace SpaceGame
@@ -24,12 +25,15 @@ namespace SpaceGame
         public Player player;
         //Enemies
         public Texture2D enemyTex;
+        Texture2D enemyTex2; 
         public Vector2 enemyPos;
-        public float enemySpeed = 1f; //Enemy speed
+        public float enemySpeed = 1.25f; //Enemy speed
+        public int enemyHealth = 1;
         Enemy[,] enemieArray;
         Enemy enemy;
         int enemyAmount = 6; //Amount of enemies per row
         int enemyRowAmount = 5; //Amount of enemy rows
+        public int eScore;
         //Bullets
         public Texture2D bulletTex;
         public Vector2 bulletPos;
@@ -37,11 +41,15 @@ namespace SpaceGame
         List<Bullet> bulletList;
         Bullet bullet;
         //GameState
+        //Playing
+        Texture2D playBackground;
         //GameOver
         bool GameOver = false;
         Texture2D gameOverText;
         Vector2 gameOverPos;
         Random rngPos = new Random();
+        //You Won
+        bool YouWon = false;
 
         public Game1()
         {
@@ -71,8 +79,10 @@ namespace SpaceGame
             //Game Running
             //Loads the textures necessary and creates the lists required. 
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            playBackground = Content.Load<Texture2D>("space2");
             playerTex = Content.Load<Texture2D>("Player");
             enemyTex = Content.Load<Texture2D>("alien02_sprites");
+            enemyTex2 = Content.Load<Texture2D>("alien03_sprites");
             bulletTex = Content.Load<Texture2D>("BulletPng");
             player = new Player(playerTex, playerPos, playerSpeed, this);
             enemieArray = new Enemy[enemyAmount, enemyRowAmount];
@@ -86,10 +96,20 @@ namespace SpaceGame
                     enemyPos.Y = r * -50;
                     int enemyFrame = 500 / (enemyAmount + 1);
                     enemyPos.X = enemyFrame + i * enemyFrame;
-                    enemieArray[i,r] = new Enemy(enemyTex,enemyPos, enemySpeed);
+                    if (r <= 2)
+                    {
+                        enemyHealth = 1;
+                        eScore = 10;
+                    }
+                    else if (r >= 3)
+                    {
+                        enemyHealth = 2;
+                        eScore = 25;
+                        enemyTex = enemyTex2;
+                    }
+                    enemieArray[i, r] = new Enemy(enemyTex, enemyPos, enemySpeed, enemyHealth, eScore);
                     continue;
                 }
-
                 enemyPos.X = 0;
             }
         }
@@ -144,10 +164,16 @@ namespace SpaceGame
                 {
                     if (bullet.GetHitBox().Intersects(enemy.GetHitBox()))
                     {
-                        score += 10;
-                        enemy.eIsAlive = false;
-                        enemy.eHitBox.X = 3000;
-                        bullet.pos.Y = -100;
+                        enemy.enemyHealth -= 1;
+                        bullet.pos.X = 5000;
+                        bullet.bHitBox.X = 5000;
+                        Debug.WriteLine("Hit!");
+                        if (enemy.enemyHealth <= 0)
+                        {
+                            score += enemy.eScore;
+                            enemy.eIsAlive = false;
+                            enemy.eHitBox.X = 3000;
+                        }
                         break;
                     }
                 }
@@ -166,10 +192,11 @@ namespace SpaceGame
 
             if (GameOver == false)
             {
+                spriteBatch.Draw(playBackground, new Vector2(_graphics.PreferredBackBufferWidth/2, _graphics.PreferredBackBufferHeight/2), null, Microsoft.Xna.Framework.Color.White, 0, new Vector2(playBackground.Width / 2, playBackground.Height / 2), 1, SpriteEffects.None, 1);
                 if (player.playerHealth > 0)
                 {
                     //Checks if the player is alive, then draws out the player
-                    if (player.pIsAlive = true)
+                    if (player.pIsAlive == true)
                     {
                         player.Draw(spriteBatch);
                     }
