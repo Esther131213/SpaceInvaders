@@ -25,10 +25,10 @@ namespace SpaceGame
         //Enemies
         public Texture2D enemyTex;
         public Vector2 enemyPos;
-        public float enemySpeed = 0.5f; //Enemy speed
+        public float enemySpeed = 1f; //Enemy speed
         Enemy[,] enemieArray;
         Enemy enemy;
-        int enemyAmount = 10; //Amount of enemies per row
+        int enemyAmount = 6; //Amount of enemies per row
         int enemyRowAmount = 5; //Amount of enemy rows
         //Bullets
         public Texture2D bulletTex;

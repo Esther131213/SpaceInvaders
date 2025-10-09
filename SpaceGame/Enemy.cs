@@ -30,7 +30,7 @@ namespace SpaceGame
         int timer = 0;
         int frame;
         double frameTimer = 0;
-        double frameInterval = 5000;
+        double frameInterval = 2000;
         int movementAmount = 0;
 
         public Enemy(Texture2D tex, Vector2 pos, float enemySpeed)
